@@ -265,15 +265,19 @@ Cada bot roda em **processo isolado**, garantindo que:
 
 ## 🐛 Troubleshooting
 
+### ⚠️ Comandos slash não aparecem no Discord?
+
+**Leia o guia completo:** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+
+**Solução rápida:**
+1. Execute `npm run deploy` para registrar os comandos
+2. Certifique-se de ter adicionado o bot com os scopes `bot` + `applications.commands`
+3. Se usou `GUILD_ID`, comandos aparecem instantaneamente. Se não, aguarde até 1 hora
+
 ### Bot não inicia
 - Verifique se o token está correto no `.env`
 - Confirme que o CLIENT_ID corresponde ao bot
 - Veja os logs no console para erros específicos
-
-### Comando /painel não aparece
-- Execute `npm run deploy` novamente
-- Se usando GUILD_ID, confirme que está no servidor correto
-- Aguarde até 1 hora para comandos globais
 
 ### Bot provisionado não fica online
 - Verifique se as credenciais fornecidas estão corretas
