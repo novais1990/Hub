@@ -16,6 +16,7 @@ if (!DISCORD_TOKEN || !CLIENT_ID) {
 }
 
 // Carrega todos os comandos dinamicamente do diretório /commands
+// Nota: Apenas arquivos com "data" e "execute" válidos serão carregados
 const commands = [];
 const commandsPath = path.join(__dirname, 'commands');
 

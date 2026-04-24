@@ -24,6 +24,7 @@ const client = new Client({
 const commands = new Map();
 
 // Carrega todos os comandos dinamicamente do diretório /commands
+// Nota: Apenas arquivos com "data" e "execute" válidos serão carregados
 const commandsPath = path.join(__dirname, 'commands');
 try {
   const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
