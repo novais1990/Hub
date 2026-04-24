@@ -21,6 +21,7 @@ const { getPainelCanalLogs } = require('../panels/painelCanalLogs');
 const { getPainelCargoCliente } = require('../panels/painelCargoCliente');
 const { getPainelAnuncio } = require('../panels/painelAnuncio');
 const { getPainelMercadoPago } = require('../panels/painelMercadoPago');
+const { getPainelPlanos } = require('../panels/painelPlanos');
 const emojis = require('../utils/emojis');
 
 // Seleções temporárias por usuário: { canalType, channelId, cargoId, anuncioChannelId, anuncioType }
@@ -93,6 +94,49 @@ async function handleButton(interaction) {
     case 'painel_mercado_pago':
       await updateComponentsV2(interaction, getPainelMercadoPago());
       break;
+
+    case 'painel_planos':
+      await updateComponentsV2(interaction, getPainelPlanos('mensal'));
+      break;
+
+    // ── Navegação de tabs dos planos ─────────────────────────────────────────
+    case 'tab_plano_mensal':
+      await updateComponentsV2(interaction, getPainelPlanos('mensal'));
+      break;
+
+    case 'tab_plano_trimestral':
+      await updateComponentsV2(interaction, getPainelPlanos('trimestral'));
+      break;
+
+    case 'tab_plano_anual':
+      await updateComponentsV2(interaction, getPainelPlanos('anual'));
+      break;
+
+    // ── Botões de assinatura dos planos ──────────────────────────────────────
+    case 'btn_assinar_mensal':
+    case 'btn_assinar_trimestral':
+    case 'btn_assinar_anual': {
+      const planType = customId.replace('btn_assinar_', '');
+      const sel = userSelections.get(userId) ?? {};
+      const hasSeguro = sel.seguroPlano === 'com_seguro';
+      
+      const planNames = {
+        mensal: 'Plano Mensal',
+        trimestral: 'Plano Trimestral',
+        anual: 'Plano Anual',
+      };
+
+      await deferUpdate(interaction);
+      await followUp(
+        interaction,
+        `${emojis.check} **${planNames[planType]}** selecionado com sucesso!\n\n` +
+        `${hasSeguro ? `${emojis.shield} Seguro ativado: Proteção de 50% em caso de falência\n` : ''}` +
+        `${emojis.payment} Em breve você receberá o link de pagamento.\n\n` +
+        `${emojis.info} Esta é uma demonstração. Em produção, integre com o sistema de pagamento.`,
+      );
+      userSelections.delete(userId);
+      break;
+    }
 
     case 'btn_back_home':
       userSelections.delete(userId);
@@ -356,6 +400,11 @@ async function handleStringSelect(interaction) {
 
     case 'select_anuncio_type':
       sel.anuncioType = values[0];
+      await deferUpdate(interaction);
+      break;
+
+    case 'select_seguro_plano':
+      sel.seguroPlano = values[0];
       await deferUpdate(interaction);
       break;
 
