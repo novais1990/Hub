@@ -1,22 +1,22 @@
 # Hub — Sistema de Bots de Vendas Automatizadas para Discord
 
 Sistema completo com dois bots integrados:
-1. **Bot de Vendas** — Bot configurável com painel administrativo usando Discord Components V2
+1. **Sales Bot** — Bot configurável com painel administrativo usando Discord Components V2
 2. **Payment Bot** — Bot de gerenciamento de assinaturas e provisionamento automático
 
 ---
 
 ## 📦 Componentes do Sistema
 
-### 🤖 Bot de Vendas (`/src`)
-Bot de vendas automatizadas com painel de configuração interativo usando **Discord Components V2** (containers, text displays, separadores, menus e botões).
+### 🤖 Sales Bot (`/sales-bot`)
+Bot de vendas automatizadas com painel de configuração interativo usando **Discord Components V2** (containers, text displays, separadores, menus e botões). Cada cliente que contratar o serviço recebe uma instância isolada deste bot.
 
 ### 💳 Payment Bot (`/payment-bot`)
 Bot de gerenciamento que processa pagamentos de assinaturas e provisiona automaticamente novos bots de vendas para clientes.
 
 ---
 
-## 🎯 Bot de Vendas — Funcionalidades
+## 🎯 Sales Bot — Funcionalidades
 
 ### Painel de Configuração (`/painel`)
 Abre um painel interativo efêmero (visível apenas para o administrador) com quatro seções:
@@ -84,42 +84,37 @@ Abre um painel interativo efêmero (visível apenas para o administrador) com qu
 
 ---
 
-## 🚀 Instalação
+## 🚀 Instalação Rápida
 
-### Bot de Vendas
+> 📖 Para o guia completo passo a passo, consulte o [SETUP.md](./SETUP.md).
+
+### Sales Bot
 
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/novais1990/Hub.git
-cd Hub
-
-# 2. Instale as dependências
+cd sales-bot
 npm install
-
-# 3. Configure as variáveis de ambiente
 cp .env.example .env
-# edite .env com seu token e IDs
-```
-
-### `.env` (Bot de Vendas)
-```env
-DISCORD_TOKEN=seu_token_aqui
-CLIENT_ID=seu_client_id_aqui
-GUILD_ID=seu_guild_id_aqui   # opcional: para registrar comandos só na sua guild (mais rápido em dev)
+# Edite .env com seu token e IDs
+npm run deploy  # Registrar comando /painel
+npm start       # Iniciar o bot
 ```
 
 ### Payment Bot
 
 ```bash
-# 1. Navegue até o diretório do payment-bot
 cd payment-bot
-
-# 2. Instale as dependências
 npm install
-
-# 3. Configure as variáveis de ambiente
 cp .env.example .env
-# edite .env com as configurações do payment bot
+# Edite .env com as configurações do payment bot
+npm run deploy  # Registrar comando /setup
+npm start       # Iniciar o bot de pagamento
+```
+
+### `.env` (Sales Bot)
+```env
+DISCORD_TOKEN=seu_token_aqui
+CLIENT_ID=seu_client_id_aqui
+GUILD_ID=seu_guild_id_aqui   # opcional: para registrar comandos só na sua guild (mais rápido em dev)
 ```
 
 ### `.env` (Payment Bot)
@@ -134,52 +129,32 @@ SUBSCRIBER_ROLE_ID=id_do_cargo_de_assinante
 
 ---
 
-## 📖 Uso
-
-### Bot de Vendas
-
-```bash
-# No diretório raiz do projeto
-npm run deploy  # Registrar comando /painel
-npm start       # Iniciar o bot
-```
-
-Após iniciar, use `/painel` em qualquer canal do servidor (requer permissão de Administrador).
-
-### Payment Bot
-
-```bash
-# No diretório payment-bot/
-npm run deploy  # Registrar comando /setup
-npm start       # Iniciar o bot de pagamento
-```
-
-Após iniciar, use `/setup` para iniciar o processo de contratação de um bot de vendas.
-
----
-
 ## 📁 Estrutura do Projeto
 
 ```
 Hub/
-├── src/                             # Bot de Vendas
-│   ├── index.js                     # Ponto de entrada
-│   ├── deploy-commands.js           # Registra /painel
-│   ├── commands/
-│   │   └── painel.js                # Comando /painel
-│   ├── handlers/
-│   │   └── interactionHandler.js   # Handler de interações
-│   ├── panels/
-│   │   ├── painelHome.js            # Painel inicial
-│   │   ├── painelCanalLogs.js       # Painel de canais
-│   │   ├── painelCargoCliente.js    # Painel de cargo
-│   │   ├── painelAnuncio.js         # Painel de anúncios
-│   │   └── painelMercadoPago.js     # Painel Mercado Pago
-│   └── utils/
-│       ├── emojis.js                # Constantes de emoji
-│       └── componentsV2.js          # Helpers Components V2
+├── sales-bot/                       # Bot de Vendas (alugável por cliente)
+│   ├── src/
+│   │   ├── index.js                 # Ponto de entrada
+│   │   ├── deploy-commands.js       # Registra /painel
+│   │   ├── commands/
+│   │   │   └── painel.js            # Comando /painel
+│   │   ├── handlers/
+│   │   │   └── interactionHandler.js # Handler de interações
+│   │   ├── panels/
+│   │   │   ├── painelHome.js         # Painel inicial
+│   │   │   ├── painelCanalLogs.js    # Painel de canais
+│   │   │   ├── painelCargoCliente.js # Painel de cargo
+│   │   │   ├── painelAnuncio.js      # Painel de anúncios
+│   │   │   ├── painelMercadoPago.js  # Painel Mercado Pago
+│   │   │   └── painelPlanos.js       # Painel de planos
+│   │   └── utils/
+│   │       ├── emojis.js             # Constantes de emoji
+│   │       └── componentsV2.js       # Helpers Components V2
+│   ├── package.json
+│   └── .env.example
 │
-├── payment-bot/                     # Bot de Pagamento
+├── payment-bot/                     # Bot de Pagamento (único)
 │   ├── src/
 │   │   ├── index.js                 # Ponto de entrada
 │   │   ├── deploy-commands.js       # Registra /setup
@@ -191,9 +166,12 @@ Hub/
 │   │       ├── emojis.js            # Constantes
 │   │       └── botManager.js        # Gerenciador de bots
 │   ├── package.json
-│   └── README.md                    # Documentação específica
+│   ├── README.md
+│   └── .env.example
 │
-├── package.json
+├── docker-compose.yml               # Para fácil deployment
+├── package.json                     # Scripts de workspace
+├── SETUP.md                         # Guia passo a passo
 └── README.md                        # Este arquivo
 ```
 
@@ -242,7 +220,7 @@ Hub/
 ## 🌟 Como Funciona o Provisionamento
 
 1. **Payment Bot** recebe as credenciais via modal
-2. **Bot Manager** cria um processo filho do bot de vendas
+2. **Bot Manager** cria um processo filho do bot de vendas (`sales-bot/src/index.js`)
 3. Injeta variáveis de ambiente (TOKEN, CLIENT_ID, GUILD_ID)
 4. Bot de vendas inicia automaticamente
 5. Cliente pode usar `/painel` imediatamente
@@ -256,7 +234,8 @@ Cada bot roda em **processo isolado**, garantindo que:
 
 ## 📚 Documentação Adicional
 
-- [Bot de Vendas — Detalhes de Implementação](./src/)
+- [Guia de Setup](./SETUP.md)
+- [Sales Bot — Código Fonte](./sales-bot/)
 - [Payment Bot — Documentação Completa](./payment-bot/README.md)
 - [Discord.js Documentation](https://discord.js.org/)
 - [Discord Components V2](https://discord.com/developers/docs/components/reference)
@@ -271,14 +250,19 @@ Cada bot roda em **processo isolado**, garantindo que:
 - Veja os logs no console para erros específicos
 
 ### Comando /painel não aparece
-- Execute `npm run deploy` novamente
+- Execute `npm run deploy` dentro da pasta `sales-bot/`
 - Se usando GUILD_ID, confirme que está no servidor correto
 - Aguarde até 1 hora para comandos globais
+
+### Comando /setup não aparece
+- Execute `npm run deploy` dentro da pasta `payment-bot/`
+- Confirme que o bot de pagamento está no servidor correto
 
 ### Bot provisionado não fica online
 - Verifique se as credenciais fornecidas estão corretas
 - Confirme que o token do bot de vendas é válido
 - Veja os logs do Payment Bot para detalhes do erro
+- Verifique o arquivo `logs/bot-{guildId}.log`
 
 ---
 
@@ -286,12 +270,14 @@ Cada bot roda em **processo isolado**, garantindo que:
 
 Este é um sistema modular. Para adicionar funcionalidades:
 
-1. **Novo painel no bot de vendas**: Crie em `src/panels/`
-2. **Novo comando**: Adicione em `src/commands/` ou `payment-bot/src/commands/`
-3. **Nova integração**: Crie em `src/utils/` ou `payment-bot/src/utils/`
+1. **Novo painel no bot de vendas**: Crie em `sales-bot/src/panels/`
+2. **Novo comando no sales-bot**: Adicione em `sales-bot/src/commands/`
+3. **Novo comando no payment-bot**: Adicione em `payment-bot/src/commands/`
+4. **Nova integração**: Crie em `sales-bot/src/utils/` ou `payment-bot/src/utils/`
 
 ---
 
 ## 📄 Licença
 
 Hub Bot System — Sistema de Vendas Automatizadas para Discord
+
