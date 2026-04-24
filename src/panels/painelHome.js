@@ -44,6 +44,11 @@ function getPainelHome(userName) {
         .setLabel('Mercado Pago')
         .setEmoji(emojis.mercadoPago)
         .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId('painel_planos')
+        .setLabel('Planos de Assinatura')
+        .setEmoji(emojis.planos)
+        .setStyle(ButtonStyle.Primary),
     );
 
   return [
@@ -68,6 +73,7 @@ function getPainelHome(userName) {
             `${emojis.cargo} Cargo Cliente`,
             `${emojis.anuncio} Criar Anúncio`,
             `${emojis.mercadoPago} Mercado Pago`,
+            `${emojis.planos} Planos de Assinatura`,
             '',
             'Escolha a opção abaixo!',
           ].join('\n'),

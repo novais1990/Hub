@@ -26,4 +26,6 @@ module.exports = {
   payment: '💰',
   bot: '🤖',
   key: '🔑',
+  planos: '📋',
+  shield: '🛡️',
 };
