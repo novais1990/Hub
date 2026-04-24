@@ -545,6 +545,11 @@ async function handleModalSubmit(interaction) {
       guildFinances.totalProfit += lucro;
       financialData.set(guildId, guildFinances);
 
+      // Aviso se o lucro for negativo (vendendo no prejuízo)
+      const warningMsg = lucro < 0 
+        ? `\n${emojis.warning} **ATENÇÃO:** Este produto está sendo vendido com prejuízo (custo maior que preço)!` 
+        : '';
+
       // Confirmação efêmera para o admin
       await interaction.reply({
         content: [
@@ -556,6 +561,7 @@ async function handleModalSubmit(interaction) {
           `**Custo:** R$ ${custo}`,
           `**Lucro:** R$ ${formatCurrency(lucro)}`,
           `**Canal:** <#${channelId}>`,
+          warningMsg,
           '',
           `${emojis.info} O anúncio foi publicado no canal selecionado.`,
         ].join('\n'),
