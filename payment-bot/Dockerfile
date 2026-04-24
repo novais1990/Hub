@@ -16,8 +16,9 @@ COPY src/ ./src/
 # Define variáveis de ambiente padrão (podem ser sobrescritas)
 ENV NODE_ENV=production
 
-# Cria um usuário não-root para executar a aplicação
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 && \
+# Cria um usuário não-root e altera a propriedade dos arquivos
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
     chown -R nodejs:nodejs /app
 
 # Define o usuário para executar o container
