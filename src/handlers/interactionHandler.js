@@ -20,12 +20,13 @@ const { getPainelHome } = require('../panels/painelHome');
 const { getPainelCanalLogs } = require('../panels/painelCanalLogs');
 const { getPainelCargoCliente } = require('../panels/painelCargoCliente');
 const { getPainelAnuncio } = require('../panels/painelAnuncio');
+const { getPainelMercadoPago } = require('../panels/painelMercadoPago');
 const emojis = require('../utils/emojis');
 
 // Seleções temporárias por usuário: { canalType, channelId, cargoId, anuncioChannelId, anuncioType }
 const userSelections = new Map();
 
-// Configurações salvas por guild: { canal_ticket_fechado, canal_ticket_vendas, canal_transcript, canal_ticket_aberto, cargoCliente }
+// Configurações salvas por guild: { canal_ticket_fechado, canal_ticket_vendas, canal_transcript, canal_ticket_aberto, cargoCliente, mercadoPagoToken }
 const guildConfigs = new Map();
 
 /** Labels amigáveis para os tipos de canal de log */
@@ -89,6 +90,10 @@ async function handleButton(interaction) {
       await updateComponentsV2(interaction, getPainelAnuncio());
       break;
 
+    case 'painel_mercado_pago':
+      await updateComponentsV2(interaction, getPainelMercadoPago());
+      break;
+
     case 'btn_back_home':
       userSelections.delete(userId);
       await updateComponentsV2(interaction, getPainelHome(userName));
@@ -98,6 +103,7 @@ async function handleButton(interaction) {
     case 'btn_show_canal_logs':
     case 'btn_show_cargo_cliente':
     case 'btn_show_anuncio':
+    case 'btn_show_mercado_pago':
       await deferUpdate(interaction);
       break;
 
@@ -283,6 +289,48 @@ async function handleButton(interaction) {
       await followUp(interaction, `${emojis.trash} Rascunho de anúncio descartado!`);
       break;
 
+    // ── Configurar — Mercado Pago (abre Modal) ───────────────────────────────
+    case 'btn_config_mercado_pago': {
+      const modal = new ModalBuilder()
+        .setCustomId('modal_mercado_pago')
+        .setTitle('Configurar Mercado Pago')
+        .addComponents(
+          new ActionRowBuilder().addComponents(
+            new TextInputBuilder()
+              .setCustomId('mercado_pago_token')
+              .setLabel('Token de Produção')
+              .setStyle(TextInputStyle.Paragraph)
+              .setPlaceholder('Cole aqui seu token de produção do Mercado Pago')
+              .setRequired(true)
+              .setMaxLength(500),
+          ),
+        );
+
+      await interaction.showModal(modal);
+      break;
+    }
+
+    // ── Cancelar — Mercado Pago ──────────────────────────────────────────────
+    case 'btn_cancel_mercado_pago':
+      userSelections.delete(userId);
+      await updateComponentsV2(interaction, getPainelHome(userName));
+      break;
+
+    // ── Excluir — Mercado Pago ───────────────────────────────────────────────
+    case 'btn_delete_mercado_pago': {
+      const cfg = guildConfigs.get(guildId);
+      if (cfg?.mercadoPagoToken) {
+        delete cfg.mercadoPagoToken;
+        await deferUpdate(interaction);
+        await followUp(interaction, `${emojis.trash} Configuração de **Mercado Pago** excluída com sucesso!`);
+      } else {
+        await deferUpdate(interaction);
+        await followUp(interaction, `${emojis.info} Nenhuma configuração do Mercado Pago encontrada para excluir.`);
+      }
+      userSelections.delete(userId);
+      break;
+    }
+
     default:
       console.warn(`[InteractionHandler] Botão não tratado: ${customId}`);
       await deferUpdate(interaction);
@@ -421,6 +469,35 @@ async function handleModalSubmit(interaction) {
           console.error('[InteractionHandler] Erro ao publicar anúncio:', err);
         }
       }
+
+      userSelections.delete(userId);
+      break;
+    }
+
+    case 'modal_mercado_pago': {
+      const token = interaction.fields.getTextInputValue('mercado_pago_token');
+      const guildId = interaction.guildId;
+
+      // Salva na config da guild
+      if (!guildConfigs.has(guildId)) guildConfigs.set(guildId, {});
+      guildConfigs.get(guildId).mercadoPagoToken = token;
+
+      // Mascara o token para exibição (mostra apenas os primeiros e últimos caracteres)
+      const maskedToken = token.length > 20 
+        ? `${token.slice(0, 10)}...${token.slice(-10)}`
+        : '***';
+
+      await interaction.reply({
+        content: [
+          `${emojis.check} **Token do Mercado Pago configurado com sucesso!**`,
+          '',
+          `**Token:** ${maskedToken}`,
+          '',
+          `${emojis.info} O token foi salvo e será usado para processar pagamentos.`,
+          `${emojis.warning} Mantenha seu token seguro e nunca o compartilhe.`,
+        ].join('\n'),
+        ephemeral: true,
+      });
 
       userSelections.delete(userId);
       break;

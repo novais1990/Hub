@@ -22,4 +22,8 @@ module.exports = {
   warning: '⚠️',
   money: '💵',
   star: '⭐',
+  mercadoPago: '💳',
+  payment: '💰',
+  bot: '🤖',
+  key: '🔑',
 };

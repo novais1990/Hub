@@ -18,7 +18,7 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
  * @returns {object[]}
  */
 function getPainelHome(userName) {
-  const actionRow = new ActionRowBuilder()
+  const actionRow1 = new ActionRowBuilder()
     .addComponents(
       new ButtonBuilder()
         .setCustomId('painel_canal_logs')
@@ -34,6 +34,15 @@ function getPainelHome(userName) {
         .setCustomId('painel_anuncio')
         .setLabel('Criar Anúncio')
         .setEmoji(emojis.anuncio)
+        .setStyle(ButtonStyle.Primary),
+    );
+
+  const actionRow2 = new ActionRowBuilder()
+    .addComponents(
+      new ButtonBuilder()
+        .setCustomId('painel_mercado_pago')
+        .setLabel('Mercado Pago')
+        .setEmoji(emojis.mercadoPago)
         .setStyle(ButtonStyle.Primary),
     );
 
@@ -58,11 +67,13 @@ function getPainelHome(userName) {
             `${emojis.canal} Canal Logs`,
             `${emojis.cargo} Cargo Cliente`,
             `${emojis.anuncio} Criar Anúncio`,
+            `${emojis.mercadoPago} Mercado Pago`,
             '',
             'Escolha a opção abaixo!',
           ].join('\n'),
         },
-        actionRow.toJSON(),
+        actionRow1.toJSON(),
+        actionRow2.toJSON(),
       ],
     },
   ];
