@@ -32,8 +32,13 @@ const userSelections = new Map();
 const guildConfigs = new Map();
 
 // Dados financeiros por guild: { sales: [], totalRevenue, totalCost, totalProfit }
-// Cada venda: { titulo, preco, custo, lucro, data, tipo }
+// Cada venda: { titulo, preco, custo, lucro, date, tipo }
 const financialData = new Map();
+
+/** Formatar valores monetários */
+const formatCurrency = (value) => {
+  return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+};
 
 /** Labels amigáveis para os tipos de canal de log */
 const CANAL_LABELS = {
@@ -516,7 +521,7 @@ async function handleModalSubmit(interaction) {
         preco: precoNum,
         custo: custoNum,
         lucro,
-        data: new Date().toISOString(),
+        date: new Date().toISOString(),
         tipo: typeLabel,
       });
       guildFinances.totalRevenue += precoNum;
@@ -533,7 +538,7 @@ async function handleModalSubmit(interaction) {
           `**Tipo:** ${typeLabel}`,
           `**Preço de Venda:** R$ ${preco}`,
           `**Custo:** R$ ${custo}`,
-          `**Lucro:** R$ ${lucro.toFixed(2)}`,
+          `**Lucro:** R$ ${formatCurrency(lucro)}`,
           `**Canal:** <#${channelId}>`,
           '',
           `${emojis.info} O anúncio foi publicado no canal selecionado.`,
