@@ -79,8 +79,8 @@ function getPainelPlanos(activePlan = 'mensal') {
     '**Benefícios:**',
     ...plano.beneficios,
     '',
-    `${emojis.info} **Proteção Seguro:** Adicione proteção contra falência da empresa`,
-    '🛡️ Devolução de 50% do valor do mês em caso de falência',
+    `${emojis.info} **Seguro de Proteção:** Adicione proteção contra falência da empresa`,
+    `${emojis.shield} Devolução de 50% do valor do mês em caso de falência`,
   ].filter(line => line !== '').join('\n');
 
   // Menu de seleção de seguro

@@ -168,7 +168,7 @@ Benefícios:
 ✅ Atualizações automáticas
 ✅ Cancelamento a qualquer momento
 
-ℹ️ Proteção Seguro: Adicione proteção contra falência
+ℹ️ Seguro de Proteção: Adicione proteção contra falência
 🛡️ Devolução de 50% do valor do mês em caso de falência
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━
