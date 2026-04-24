@@ -13,6 +13,7 @@ require('dotenv').config();
 
 const { REST, Routes } = require('discord.js');
 const painelCommand = require('./commands/painel');
+const faturamentoCommand = require('./commands/faturamento');
 
 const { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } = process.env;
 
@@ -21,7 +22,7 @@ if (!DISCORD_TOKEN || !CLIENT_ID) {
   process.exit(1);
 }
 
-const commands = [painelCommand.data.toJSON()];
+const commands = [painelCommand.data.toJSON(), faturamentoCommand.data.toJSON()];
 const rest = new REST().setToken(DISCORD_TOKEN);
 
 (async () => {

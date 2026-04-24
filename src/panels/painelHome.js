@@ -49,6 +49,11 @@ function getPainelHome(userName) {
         .setLabel('Planos de Assinatura')
         .setEmoji(emojis.planos)
         .setStyle(ButtonStyle.Primary),
+      new ButtonBuilder()
+        .setCustomId('painel_faturamento')
+        .setLabel('Dashboard Financeiro')
+        .setEmoji(emojis.dashboard)
+        .setStyle(ButtonStyle.Primary),
     );
 
   return [
@@ -74,6 +79,7 @@ function getPainelHome(userName) {
             `${emojis.anuncio} Criar Anúncio`,
             `${emojis.mercadoPago} Mercado Pago`,
             `${emojis.planos} Planos de Assinatura`,
+            `${emojis.dashboard} Dashboard Financeiro`,
             '',
             'Escolha a opção abaixo!',
           ].join('\n'),

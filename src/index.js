@@ -8,6 +8,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Events } = require('discord.js');
 const { handleInteraction } = require('./handlers/interactionHandler');
 const painelCommand = require('./commands/painel');
+const faturamentoCommand = require('./commands/faturamento');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Cliente Discord
@@ -22,6 +23,7 @@ const client = new Client({
 // Mapa de comandos disponíveis
 const commands = new Map();
 commands.set(painelCommand.data.name, painelCommand);
+commands.set(faturamentoCommand.data.name, faturamentoCommand);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Eventos

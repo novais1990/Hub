@@ -22,6 +22,7 @@ const { getPainelCargoCliente } = require('../panels/painelCargoCliente');
 const { getPainelAnuncio } = require('../panels/painelAnuncio');
 const { getPainelMercadoPago } = require('../panels/painelMercadoPago');
 const { getPainelPlanos } = require('../panels/painelPlanos');
+const { getPainelFaturamento } = require('../panels/painelFaturamento');
 const emojis = require('../utils/emojis');
 
 // Seleções temporárias por usuário: { canalType, channelId, cargoId, anuncioChannelId, anuncioType }
@@ -29,6 +30,10 @@ const userSelections = new Map();
 
 // Configurações salvas por guild: { canal_ticket_fechado, canal_ticket_vendas, canal_transcript, canal_ticket_aberto, cargoCliente, mercadoPagoToken }
 const guildConfigs = new Map();
+
+// Dados financeiros por guild: { sales: [], totalRevenue, totalCost, totalProfit }
+// Cada venda: { titulo, preco, custo, lucro, data, tipo }
+const financialData = new Map();
 
 /** Labels amigáveis para os tipos de canal de log */
 const CANAL_LABELS = {
@@ -98,6 +103,12 @@ async function handleButton(interaction) {
     case 'painel_planos':
       await updateComponentsV2(interaction, getPainelPlanos('mensal'));
       break;
+
+    case 'painel_faturamento': {
+      const guildFinances = financialData.get(guildId) ?? { sales: [], totalRevenue: 0, totalCost: 0, totalProfit: 0 };
+      await updateComponentsV2(interaction, getPainelFaturamento(userName, guildFinances));
+      break;
+    }
 
     // ── Navegação de tabs dos planos ─────────────────────────────────────────
     case 'tab_plano_mensal':
@@ -308,9 +319,18 @@ async function handleButton(interaction) {
           new ActionRowBuilder().addComponents(
             new TextInputBuilder()
               .setCustomId('anuncio_preco')
-              .setLabel('Preço (R$)')
+              .setLabel('Preço de Venda (R$)')
               .setStyle(TextInputStyle.Short)
               .setPlaceholder('Ex: 97,00')
+              .setRequired(true)
+              .setMaxLength(20),
+          ),
+          new ActionRowBuilder().addComponents(
+            new TextInputBuilder()
+              .setCustomId('anuncio_custo')
+              .setLabel('Custo do Produto (R$)')
+              .setStyle(TextInputStyle.Short)
+              .setPlaceholder('Ex: 45,00')
               .setRequired(true)
               .setMaxLength(20),
           ),
@@ -478,10 +498,31 @@ async function handleModalSubmit(interaction) {
       const titulo = interaction.fields.getTextInputValue('anuncio_titulo');
       const descricao = interaction.fields.getTextInputValue('anuncio_descricao');
       const preco = interaction.fields.getTextInputValue('anuncio_preco');
+      const custo = interaction.fields.getTextInputValue('anuncio_custo');
 
       const sel = userSelections.get(userId) ?? {};
       const channelId = sel.anuncioChannelId;
       const typeLabel = ANUNCIO_TYPE_LABELS[sel.anuncioType] ?? sel.anuncioType ?? 'N/A';
+
+      // Converter valores para número
+      const precoNum = parseFloat(preco.replace(',', '.')) || 0;
+      const custoNum = parseFloat(custo.replace(',', '.')) || 0;
+      const lucro = precoNum - custoNum;
+
+      // Registrar venda nos dados financeiros
+      const guildFinances = financialData.get(guildId) ?? { sales: [], totalRevenue: 0, totalCost: 0, totalProfit: 0 };
+      guildFinances.sales.push({
+        titulo,
+        preco: precoNum,
+        custo: custoNum,
+        lucro,
+        data: new Date().toISOString(),
+        tipo: typeLabel,
+      });
+      guildFinances.totalRevenue += precoNum;
+      guildFinances.totalCost += custoNum;
+      guildFinances.totalProfit += lucro;
+      financialData.set(guildId, guildFinances);
 
       // Confirmação efêmera para o admin
       await interaction.reply({
@@ -490,7 +531,9 @@ async function handleModalSubmit(interaction) {
           '',
           `**Título:** ${titulo}`,
           `**Tipo:** ${typeLabel}`,
-          `**Preço:** R$ ${preco}`,
+          `**Preço de Venda:** R$ ${preco}`,
+          `**Custo:** R$ ${custo}`,
+          `**Lucro:** R$ ${lucro.toFixed(2)}`,
           `**Canal:** <#${channelId}>`,
           '',
           `${emojis.info} O anúncio foi publicado no canal selecionado.`,
@@ -557,4 +600,13 @@ async function handleModalSubmit(interaction) {
   }
 }
 
-module.exports = { handleInteraction, guildConfigs, userSelections };
+/**
+ * Retorna os dados financeiros de uma guild.
+ * @param {string} guildId
+ * @returns {object} { sales: [], totalRevenue: 0, totalCost: 0, totalProfit: 0 }
+ */
+function getFinancialData(guildId) {
+  return financialData.get(guildId) ?? { sales: [], totalRevenue: 0, totalCost: 0, totalProfit: 0 };
+}
+
+module.exports = { handleInteraction, guildConfigs, userSelections, getFinancialData };

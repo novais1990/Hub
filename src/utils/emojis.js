@@ -28,4 +28,8 @@ module.exports = {
   key: '🔑',
   planos: '📋',
   shield: '🛡️',
+  dashboard: '📊',
+  graph: '📈',
+  coins: '💰',
+  receipt: '🧾',
 };
