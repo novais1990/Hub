@@ -10,6 +10,7 @@
     "install:all": "npm install --prefix sales-bot && npm install --prefix payment-bot"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "dotenv": "^16.4.5"
   }
 }
