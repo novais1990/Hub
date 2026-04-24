@@ -8,19 +8,17 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instala as dependências
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Copia o código fonte
 COPY src/ ./src/
 
-# Cria um usuário não-root para executar a aplicação
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
-
 # Define variáveis de ambiente padrão (podem ser sobrescritas)
 ENV NODE_ENV=production
 
-# Altera a propriedade dos arquivos para o usuário nodejs
-RUN chown -R nodejs:nodejs /app
+# Cria um usuário não-root para executar a aplicação
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
 
 # Define o usuário para executar o container
 USER nodejs
