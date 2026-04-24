@@ -33,7 +33,7 @@ const userSelections = new Map();
 const guildConfigs = new Map();
 
 // Dados financeiros por guild: { sales: [], totalRevenue, totalCost, totalProfit }
-// Cada venda: { titulo, preco, custo, lucro, date, tipo }
+// Cada venda: { titulo, preco, custo, lucro, data, tipo }
 // AVISO: Armazenamento em memória - todos os dados serão perdidos ao reiniciar o bot.
 // Para produção, implemente persistência em banco de dados.
 const financialData = new Map();
@@ -537,7 +537,7 @@ async function handleModalSubmit(interaction) {
         preco: precoNum,
         custo: custoNum,
         lucro,
-        date: new Date().toISOString(),
+        data: new Date().toISOString(),
         tipo: typeLabel,
       });
       guildFinances.totalRevenue += precoNum;

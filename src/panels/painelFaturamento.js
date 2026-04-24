@@ -69,7 +69,7 @@ function getPainelFaturamento(userName, financialData = { sales: [], totalRevenu
     const recentSales = financialData.sales.slice(-5).reverse();
     recentSalesContent += '\n';
     recentSales.forEach((sale, index) => {
-      const saleDate = new Date(sale.date).toLocaleDateString('pt-BR', {
+      const saleDate = new Date(sale.data).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
