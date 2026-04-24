@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Bot de Vendas — instalado em cada servidor cliente
+  sales-bot:
+    build:
+      context: ./sales-bot
+      dockerfile: Dockerfile
+    container_name: hub-sales-bot
+    restart: unless-stopped
+    env_file:
+      - ./sales-bot/.env
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - hub-network
+
+  # Bot de Pagamento — único, gerencia assinaturas
+  payment-bot:
+    build:
+      context: ./payment-bot
+      dockerfile: Dockerfile
+    container_name: hub-payment-bot
+    restart: unless-stopped
+    env_file:
+      - ./payment-bot/.env
+    volumes:
+      - ./logs:/app/logs
+      - ./sales-bot:/sales-bot:ro
+    networks:
+      - hub-network
+    depends_on:
+      - sales-bot
+
+networks:
+  hub-network:
+    driver: bridge
+
+volumes:
+  logs:
