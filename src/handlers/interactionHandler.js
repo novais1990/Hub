@@ -23,6 +23,7 @@ const { getPainelAnuncio } = require('../panels/painelAnuncio');
 const { getPainelMercadoPago } = require('../panels/painelMercadoPago');
 const { getPainelPlanos } = require('../panels/painelPlanos');
 const { getPainelFaturamento } = require('../panels/painelFaturamento');
+const { formatCurrency, parseCurrency } = require('../utils/currency');
 const emojis = require('../utils/emojis');
 
 // Seleções temporárias por usuário: { canalType, channelId, cargoId, anuncioChannelId, anuncioType }
@@ -33,12 +34,9 @@ const guildConfigs = new Map();
 
 // Dados financeiros por guild: { sales: [], totalRevenue, totalCost, totalProfit }
 // Cada venda: { titulo, preco, custo, lucro, date, tipo }
+// AVISO: Armazenamento em memória - todos os dados serão perdidos ao reiniciar o bot.
+// Para produção, implemente persistência em banco de dados.
 const financialData = new Map();
-
-/** Formatar valores monetários */
-const formatCurrency = (value) => {
-  return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-};
 
 /** Labels amigáveis para os tipos de canal de log */
 const CANAL_LABELS = {
@@ -509,9 +507,27 @@ async function handleModalSubmit(interaction) {
       const channelId = sel.anuncioChannelId;
       const typeLabel = ANUNCIO_TYPE_LABELS[sel.anuncioType] ?? sel.anuncioType ?? 'N/A';
 
-      // Converter valores para número
-      const precoNum = parseFloat(preco.replace(',', '.')) || 0;
-      const custoNum = parseFloat(custo.replace(',', '.')) || 0;
+      // Converter e validar valores
+      const precoNum = parseCurrency(preco);
+      const custoNum = parseCurrency(custo);
+
+      // Validar entradas
+      if (isNaN(precoNum) || precoNum < 0) {
+        await interaction.reply({
+          content: `${emojis.error} **Preço inválido!** Por favor, insira um valor numérico válido (ex: 97,00 ou 97.00).`,
+          ephemeral: true,
+        });
+        break;
+      }
+
+      if (isNaN(custoNum) || custoNum < 0) {
+        await interaction.reply({
+          content: `${emojis.error} **Custo inválido!** Por favor, insira um valor numérico válido (ex: 45,00 ou 45.00).`,
+          ephemeral: true,
+        });
+        break;
+      }
+
       const lucro = precoNum - custoNum;
 
       // Registrar venda nos dados financeiros

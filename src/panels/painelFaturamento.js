@@ -15,6 +15,7 @@
 
 const emojis = require('../utils/emojis');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { formatCurrency } = require('../utils/currency');
 
 /**
  * Retorna o array de componentes do dashboard financeiro.
@@ -31,11 +32,6 @@ function getPainelFaturamento(userName, financialData = { sales: [], totalRevenu
         .setEmoji(emojis.home)
         .setStyle(ButtonStyle.Secondary),
     );
-
-  // Formatar valores monetários
-  const formatCurrency = (value) => {
-    return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  };
 
   // Informações gerais
   const totalSales = financialData.sales.length;
