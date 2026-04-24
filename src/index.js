@@ -7,7 +7,8 @@ require('dotenv').config();
 
 const { Client, GatewayIntentBits, Events } = require('discord.js');
 const { handleInteraction } = require('./handlers/interactionHandler');
-const painelCommand = require('./commands/painel');
+const fs = require('fs');
+const path = require('path');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Cliente Discord
@@ -21,7 +22,29 @@ const client = new Client({
 
 // Mapa de comandos disponíveis
 const commands = new Map();
-commands.set(painelCommand.data.name, painelCommand);
+
+// Carrega todos os comandos dinamicamente do diretório /commands
+const commandsPath = path.join(__dirname, 'commands');
+try {
+  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+  
+  for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    
+    if (command.data && command.execute) {
+      commands.set(command.data.name, command);
+      console.log(`✅ Comando carregado: /${command.data.name}`);
+    } else {
+      console.warn(`⚠️  Comando em ${file} está faltando "data" ou "execute"`);
+    }
+  }
+  
+  console.log(`📦 Total de ${commands.size} comando(s) carregado(s)`);
+} catch (error) {
+  console.error('❌ Erro ao carregar comandos:', error);
+  process.exit(1);
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Eventos

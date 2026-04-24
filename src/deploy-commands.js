@@ -12,7 +12,8 @@
 require('dotenv').config();
 
 const { REST, Routes } = require('discord.js');
-const painelCommand = require('./commands/painel');
+const fs = require('fs');
+const path = require('path');
 
 const { DISCORD_TOKEN, CLIENT_ID, GUILD_ID } = process.env;
 
@@ -21,7 +22,36 @@ if (!DISCORD_TOKEN || !CLIENT_ID) {
   process.exit(1);
 }
 
-const commands = [painelCommand.data.toJSON()];
+// Carrega todos os comandos dinamicamente do diretório /commands
+const commands = [];
+const commandsPath = path.join(__dirname, 'commands');
+
+try {
+  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+  
+  for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    const command = require(filePath);
+    
+    if (command.data && command.execute) {
+      commands.push(command.data.toJSON());
+      console.log(`✅ Comando preparado para deploy: /${command.data.name}`);
+    } else {
+      console.warn(`⚠️  Comando em ${file} está faltando "data" ou "execute"`);
+    }
+  }
+  
+  if (commands.length === 0) {
+    console.error('❌ Nenhum comando encontrado para registrar');
+    process.exit(1);
+  }
+  
+  console.log(`📦 Total de ${commands.length} comando(s) para registrar`);
+} catch (error) {
+  console.error('❌ Erro ao carregar comandos:', error);
+  process.exit(1);
+}
+
 const rest = new REST().setToken(DISCORD_TOKEN);
 
 (async () => {
