@@ -482,9 +482,9 @@ async function handleModalSubmit(interaction) {
       if (!guildConfigs.has(guildId)) guildConfigs.set(guildId, {});
       guildConfigs.get(guildId).mercadoPagoToken = token;
 
-      // Mascara o token para exibição (mostra apenas os primeiros e últimos caracteres)
-      const maskedToken = token.length > 20 
-        ? `${token.slice(0, 10)}...${token.slice(-10)}`
+      // Mascara o token para exibição (mostra apenas os últimos 4 caracteres)
+      const maskedToken = token.length > 4 
+        ? `***${token.slice(-4)}`
         : '***';
 
       await interaction.reply({

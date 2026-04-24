@@ -146,9 +146,36 @@ async function handleModalSubmit(interaction) {
 
   switch (customId) {
     case 'modal_bot_config': {
-      const ownerId = interaction.fields.getTextInputValue('bot_owner_id');
-      const clientId = interaction.fields.getTextInputValue('bot_client_id');
-      const token = interaction.fields.getTextInputValue('bot_token');
+      const ownerId = interaction.fields.getTextInputValue('bot_owner_id').trim();
+      const clientId = interaction.fields.getTextInputValue('bot_client_id').trim();
+      const token = interaction.fields.getTextInputValue('bot_token').trim();
+
+      // Validação básica dos IDs (Discord Snowflakes são numéricos de 17-19 dígitos)
+      const snowflakeRegex = /^\d{17,19}$/;
+      if (!snowflakeRegex.test(ownerId)) {
+        await interaction.reply({
+          content: `${emojis.error} **ID do Dono inválido.** Deve ser um número de 17-19 dígitos.`,
+          ephemeral: true,
+        });
+        return;
+      }
+
+      if (!snowflakeRegex.test(clientId)) {
+        await interaction.reply({
+          content: `${emojis.error} **Client ID inválido.** Deve ser um número de 17-19 dígitos.`,
+          ephemeral: true,
+        });
+        return;
+      }
+
+      // Validação básica do token (deve ter formato parecido com um token Discord)
+      if (token.length < 50 || !token.includes('.')) {
+        await interaction.reply({
+          content: `${emojis.error} **Token inválido.** Verifique se copiou o token completo do Discord Developer Portal.`,
+          ephemeral: true,
+        });
+        return;
+      }
 
       await interaction.reply({
         content: `${emojis.rocket} **Provisionando seu bot...**\n\nIsso pode levar alguns segundos.`,

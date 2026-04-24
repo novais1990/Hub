@@ -30,7 +30,10 @@ async function startBot(guildId, config) {
     // Caminho para o bot de vendas principal
     const botPath = path.join(__dirname, '../../../src/index.js');
     
-    // Inicia o bot como um processo filho
+    // Inicia o bot como um processo filho com logs direcionados
+    const logPath = path.join(__dirname, `../../../logs/bot-${guildId}.log`);
+    const logStream = require('fs').createWriteStream(logPath, { flags: 'a' });
+    
     const botProcess = spawn('node', [botPath], {
       env: {
         ...process.env,
@@ -39,7 +42,7 @@ async function startBot(guildId, config) {
         GUILD_ID: guildId,
       },
       detached: true,
-      stdio: 'ignore',
+      stdio: ['ignore', logStream, logStream], // stdout e stderr para arquivo de log
     });
 
     // Desanexa o processo para que ele continue rodando independentemente
