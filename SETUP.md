@@ -240,16 +240,7 @@ docker-compose logs -f
 docker-compose down
 ```
 
-> ⚠️ O Docker Compose ainda requer os arquivos `Dockerfile` em cada pasta.  
-> Crie um `Dockerfile` simples em cada bot:
-> ```dockerfile
-> FROM node:18-alpine
-> WORKDIR /app
-> COPY package*.json ./
-> RUN npm install --production
-> COPY src/ ./src/
-> CMD ["node", "src/index.js"]
-> ```
+> ✅ Os arquivos `Dockerfile` já estão incluídos em cada pasta do bot.
 
 ---
 
