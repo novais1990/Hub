@@ -6,7 +6,7 @@ Este guia explica como fazer o deploy do projeto Hub no Discloud.
 
 O arquivo `discloud.config` na raiz do projeto está configurado para hospedar o **Payment Bot**:
 
-```
+```ini
 TYPE=bot
 MAIN=payment-bot/src/index.js
 NAME=Bothub
@@ -55,7 +55,7 @@ O `package.json` raiz inclui um script `postinstall` que instala automaticamente
 Se você quiser hospedar o **Sales Bot** no Discloud em vez do Payment Bot, você precisará:
 
 1. **Criar um novo `discloud.config` apontando para o sales-bot:**
-   ```
+   ```ini
    TYPE=bot
    MAIN=sales-bot/src/index.js
    NAME=SalesBot
