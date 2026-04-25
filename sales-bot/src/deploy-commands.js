@@ -9,8 +9,6 @@
  * Caso contrário, são registrados globalmente (pode levar até 1 hora).
  */
 
-require('dotenv').config();
-
 const { REST, Routes } = require('discord.js');
 const fs = require('fs');
 const path = require('path');

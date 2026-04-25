@@ -3,8 +3,6 @@
  * Inicializa o cliente Discord, carrega eventos e realiza o login.
  */
 
-require('dotenv').config();
-
 const { Client, GatewayIntentBits, Events } = require('discord.js');
 const { handleInteraction } = require('./handlers/interactionHandler');
 const fs = require('fs');
