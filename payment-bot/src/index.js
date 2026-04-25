@@ -3,8 +3,6 @@
  * Gerencia assinaturas e provisionamento de bots de vendas.
  */
 
-require('dotenv').config();
-
 const { Client, GatewayIntentBits, Events } = require('discord.js');
 const { handleInteraction } = require('./handlers/paymentHandler');
 const fs = require('fs');
