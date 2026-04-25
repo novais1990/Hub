@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     container_name: hub-sales-bot
     restart: unless-stopped
+    # IMPORTANTE: Crie um arquivo .env ou defina as variáveis de ambiente manualmente
+    # O bot não usa mais o pacote 'dotenv' - variáveis são lidas de process.env
     env_file:
       - ./sales-bot/.env
     volumes:
@@ -22,6 +24,8 @@ services:
       dockerfile: Dockerfile
     container_name: hub-payment-bot
     restart: unless-stopped
+    # IMPORTANTE: Crie um arquivo .env ou defina as variáveis de ambiente manualmente
+    # O bot não usa mais o pacote 'dotenv' - variáveis são lidas de process.env
     env_file:
       - ./payment-bot/.env
     volumes:
