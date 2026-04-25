@@ -8,8 +8,9 @@ services:
       dockerfile: Dockerfile
     container_name: hub-sales-bot
     restart: unless-stopped
-    # IMPORTANTE: Crie um arquivo .env ou defina as variáveis de ambiente manualmente
-    # O bot não usa mais o pacote 'dotenv' - variáveis são lidas de process.env
+    # IMPORTANTE: Docker Compose carrega o arquivo .env e injeta as variáveis em process.env
+    # O bot não usa mais o pacote 'dotenv' - ele lê diretamente de process.env
+    # Você também pode usar 'environment:' ao invés de 'env_file:' para definir variáveis inline
     env_file:
       - ./sales-bot/.env
     volumes:
@@ -24,8 +25,9 @@ services:
       dockerfile: Dockerfile
     container_name: hub-payment-bot
     restart: unless-stopped
-    # IMPORTANTE: Crie um arquivo .env ou defina as variáveis de ambiente manualmente
-    # O bot não usa mais o pacote 'dotenv' - variáveis são lidas de process.env
+    # IMPORTANTE: Docker Compose carrega o arquivo .env e injeta as variáveis em process.env
+    # O bot não usa mais o pacote 'dotenv' - ele lê diretamente de process.env
+    # Você também pode usar 'environment:' ao invés de 'env_file:' para definir variáveis inline
     env_file:
       - ./payment-bot/.env
     volumes:
