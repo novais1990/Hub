@@ -10,10 +10,24 @@ Se você adicionou o bot ao servidor com a opção de "slash commands" habilitad
 
 ### **Passo 1: Verificar o arquivo `.env`**
 
-Certifique-se de que você criou o arquivo `.env` na raiz do projeto com as variáveis corretas:
+**Para o Sales Bot:**
+
+Certifique-se de que você criou o arquivo `.env` no diretório `sales-bot/`:
 
 ```bash
+# Navegue até o diretório do Sales Bot
+cd sales-bot
+
 # Copie o arquivo de exemplo
+cp .env.example .env
+```
+
+**Para o Payment Bot:**
+
+Se você está configurando o Payment Bot, faça o mesmo no diretório `payment-bot/`:
+
+```bash
+cd payment-bot
 cp .env.example .env
 ```
 
@@ -37,9 +51,19 @@ GUILD_ID=seu_guild_id_aqui
 
 ### **Passo 2: Registrar os comandos no Discord**
 
-**Este é o passo mais importante!** Apenas adicionar o bot ao servidor NÃO registra os comandos automaticamente. Você precisa executar:
+**Este é o passo mais importante!** Apenas adicionar o bot ao servidor NÃO registra os comandos automaticamente.
+
+**Para o Sales Bot (comando `/painel`):**
 
 ```bash
+cd sales-bot
+npm run deploy
+```
+
+**Para o Payment Bot (comando `/setup`):**
+
+```bash
+cd payment-bot
 npm run deploy
 ```
 
@@ -89,7 +113,17 @@ Se você adicionou o bot sem os **scopes** corretos, os comandos não funcionar�
 
 Após registrar os comandos, inicie o bot:
 
+**Para o Sales Bot:**
+
 ```bash
+cd sales-bot
+npm start
+```
+
+**Para o Payment Bot:**
+
+```bash
+cd payment-bot
 npm start
 ```
 
@@ -172,15 +206,24 @@ npm start
 
 Use este checklist para garantir que tudo está configurado corretamente:
 
-- [ ] ✅ Arquivo `.env` criado com `DISCORD_TOKEN`, `CLIENT_ID`, e `GUILD_ID`
-- [ ] ✅ Executei `npm install` para instalar as dependências
-- [ ] ✅ Executei `npm run deploy` para registrar os comandos
+**Para o Sales Bot:**
+- [ ] ✅ Navegado até o diretório `sales-bot/`
+- [ ] ✅ Arquivo `.env` criado em `sales-bot/` com `DISCORD_TOKEN`, `CLIENT_ID`, e `GUILD_ID`
+- [ ] ✅ Executei `npm install` no diretório `sales-bot/`
+- [ ] ✅ Executei `npm run deploy` no diretório `sales-bot/`
 - [ ] ✅ Vi a mensagem de confirmação do deploy com sucesso
 - [ ] ✅ Bot foi adicionado ao servidor com os scopes `bot` + `applications.commands`
 - [ ] ✅ Bot tem as permissões necessárias no servidor
 - [ ] ✅ Executei `npm start` e o bot está online
 - [ ] ✅ Reiniciei o Discord ou aguardei tempo suficiente para os comandos aparecerem
 - [ ] ✅ Testei digitar `/painel` em um canal onde tenho permissão de Administrador
+
+**Para o Payment Bot (se aplicável):**
+- [ ] ✅ Navegado até o diretório `payment-bot/`
+- [ ] ✅ Arquivo `.env` criado em `payment-bot/` com as variáveis necessárias
+- [ ] ✅ Executei `npm install` no diretório `payment-bot/`
+- [ ] ✅ Executei `npm run deploy` no diretório `payment-bot/`
+- [ ] ✅ Testei o comando `/setup`
 
 ---
 

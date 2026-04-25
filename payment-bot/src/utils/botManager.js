@@ -28,7 +28,7 @@ async function startBot(guildId, config) {
 
   try {
     // Caminho para o bot de vendas principal
-    const botPath = path.join(__dirname, '../../../src/index.js');
+    const botPath = path.join(__dirname, '../../../sales-bot/src/index.js');
     
     // Inicia o bot como um processo filho com logs direcionados
     const logPath = path.join(__dirname, `../../../logs/bot-${guildId}.log`);

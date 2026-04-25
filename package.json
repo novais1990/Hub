@@ -1,18 +1,16 @@
 {
-  "name": "hub-discord-bot",
+  "name": "hub-bot-system",
   "version": "1.0.0",
-  "description": "Bot de vendas automatizadas para Discord com painel de configuração",
-  "main": "src/index.js",
+  "description": "Sistema de bots de vendas automatizadas para Discord",
   "scripts": {
-    "start": "node src/index.js",
-    "deploy": "node src/deploy-commands.js"
-  },
-  "dependencies": {
-    "discord.js": "^14.16.0",
-    "discord-api-types": "^0.37.97",
-    "dotenv": "^16.4.5"
+    "start:sales": "cd sales-bot && npm start",
+    "start:payment": "cd payment-bot && npm start",
+    "deploy:sales": "cd sales-bot && npm run deploy",
+    "deploy:payment": "cd payment-bot && npm run deploy",
+    "install:all": "npm install --prefix sales-bot && npm install --prefix payment-bot"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "dotenv": "^16.4.5"
   }
 }
