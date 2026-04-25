@@ -291,6 +291,21 @@ docker-compose down
 
 - Execute `npm install` dentro da pasta do bot (`sales-bot/` ou `payment-bot/`)
 
+### Deployment no Discloud
+
+Se você está usando o Discloud para hospedar o bot:
+
+1. O arquivo `discloud.config` já está configurado para rodar o payment-bot
+2. O script `postinstall` no `package.json` raiz garante que as dependências do payment-bot sejam instaladas automaticamente
+3. Quando você fizer deploy, o Discloud executará:
+   - `npm install` (na raiz) → isso ativa o `postinstall`
+   - O `postinstall` executa `npm install --prefix payment-bot`
+   - As dependências são instaladas corretamente em `payment-bot/node_modules/`
+
+**Nota**: Se quiser fazer deploy do sales-bot no Discloud, você precisará:
+- Criar um `discloud.config` separado apontando para `sales-bot/src/index.js`
+- Adicionar um script similar para instalar dependências do sales-bot
+
 ---
 
 ## 📚 Variáveis de Ambiente — Referência Completa
