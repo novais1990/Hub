@@ -235,6 +235,7 @@ Cada bot roda em **processo isolado**, garantindo que:
 ## 📚 Documentação Adicional
 
 - [Guia de Setup](./SETUP.md)
+- [Deploy no Discloud](./DISCLOUD.md)
 - [Sales Bot — Código Fonte](./sales-bot/)
 - [Payment Bot — Documentação Completa](./payment-bot/README.md)
 - [Discord.js Documentation](https://discord.js.org/)

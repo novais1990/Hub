@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "Sistema de bots de vendas automatizadas para Discord",
   "scripts": {
+    "start": "cd payment-bot && npm start",
     "start:sales": "cd sales-bot && npm start",
     "start:payment": "cd payment-bot && npm start",
     "deploy:sales": "cd sales-bot && npm run deploy",
     "deploy:payment": "cd payment-bot && npm run deploy",
-    "install:all": "npm install --prefix sales-bot && npm install --prefix payment-bot"
+    "install:all": "npm install --prefix sales-bot && npm install --prefix payment-bot",
+    "postinstall": "npm install --prefix payment-bot"
   },
   "engines": {
     "node": ">=18.0.0"
