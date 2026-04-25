@@ -55,10 +55,16 @@ Repita os passos acima para um **segundo bot** com um nome diferente (ex: `Hub P
 
 ## ⚙️ Etapa 2 — Configurar as Variáveis de Ambiente
 
+**IMPORTANTE:** Os bots não usam mais o pacote `dotenv`. As variáveis de ambiente são lidas diretamente de `process.env`. Você pode:
+- Criar arquivos `.env` manualmente (para Docker Compose ou ferramentas que injetam variáveis automaticamente)
+- Exportar as variáveis no sistema operacional
+- Passar as variáveis diretamente na linha de comando
+
 ### Sales Bot
 
 ```bash
 cd sales-bot
+# Crie um arquivo .env baseado no .env.example
 cp .env.example .env
 ```
 
@@ -76,10 +82,26 @@ CLIENT_ID=seu_client_id_do_sales_bot
 GUILD_ID=id_do_seu_servidor_de_testes
 ```
 
+**Alternativa sem arquivo .env:**
+```bash
+# Linux/Mac
+export DISCORD_TOKEN=seu_token
+export CLIENT_ID=seu_client_id
+export GUILD_ID=seu_guild_id
+npm start
+
+# Windows (PowerShell)
+$env:DISCORD_TOKEN="seu_token"
+$env:CLIENT_ID="seu_client_id"
+$env:GUILD_ID="seu_guild_id"
+npm start
+```
+
 ### Payment Bot
 
 ```bash
 cd payment-bot
+# Crie um arquivo .env baseado no .env.example
 cp .env.example .env
 ```
 

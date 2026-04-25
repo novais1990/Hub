@@ -68,11 +68,13 @@ cd payment-bot
 npm install
 
 # 3. Configure as variáveis de ambiente
-cp .env.example .env
-# edite .env com suas configurações
+# As variáveis de ambiente devem ser definidas no sistema,
+# via Docker, ou através de ferramentas de deployment.
+# O bot NÃO usa mais o pacote 'dotenv'.
 ```
 
-### `.env`
+### Variáveis de ambiente necessárias
+
 ```env
 DISCORD_TOKEN=seu_token_do_payment_bot
 CLIENT_ID=seu_client_id_do_payment_bot
@@ -80,6 +82,14 @@ GUILD_ID=seu_guild_id  # opcional
 MERCADO_PAGO_TOKEN=seu_token_mercado_pago
 SUBSCRIPTION_PRICE=5000  # em centavos (5000 = R$ 50,00)
 SUBSCRIBER_ROLE_ID=id_do_cargo_de_assinante
+```
+
+**Como definir as variáveis:**
+
+- **Docker:** Use o arquivo `docker-compose.yml` ou a flag `-e` no `docker run`
+- **Sistema Linux/Mac:** `export DISCORD_TOKEN=seu_token`
+- **Sistema Windows:** `set DISCORD_TOKEN=seu_token` (cmd) ou `$env:DISCORD_TOKEN="seu_token"` (PowerShell)
+- **Node.js diretamente:** `DISCORD_TOKEN=seu_token npm start`
 ```
 
 ---
